@@ -1,47 +1,48 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/Home.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+<div>
+  <Navibar/>
+  <div class="container" style="margin-top:50px">
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <MovieList
+      :paginated-movies="movies"
+      :load-more="loadMore" />
+  </div>
+</div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-}
+<script setup>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+import Navibar from "@/components/Navibar.vue";
+import MovieList from "@/components/MovieList.vue";
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+const movies = ref([]); // 영화 목록 저장
+const currentPage = ref(0); // 현재 페이지 번호
+const pageSize = 10; // 한 페이지에 보여줄 영화 수
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+const fetchMovies = async (page = 1) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/api/movies/search?page=${page}&size=${pageSize}`);
+    movies.value = response.data.content; // API로부터 영화 목록 저장
+    console.log("영화 목록:", movies.value); // 영화 목록 확인
+  } catch (error) {
+    console.error('영화 데이터를 가져오는 데 오류가 발생했습니다:', error);
   }
+};
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+const loadMore = () => {
+  currentPage.value++;
+  fetchMovies(currentPage.value); // 다음 페이지의 영화 목록 요청
+};
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+onMounted(() => {
+  console.log("컴포넌트가 마운트되었습니다.");
+  fetchMovies(); // 컴포넌트가 마운트될 때 초기 영화 목록 요청
+});
+</script>
+
+<style lang="scss" scoped>
+.card {
+  width: 100%;
 }
 </style>
