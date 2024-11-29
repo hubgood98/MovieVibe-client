@@ -1,35 +1,43 @@
-@import './base.css';
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+/* 초기화 스타일 */
+* {
+  box-sizing: border-box; /* 모든 요소의 박스 모델을 border-box로 설정 */
+  margin: 0; /* 기본 여백 제거 */
+  padding: 0; /* 기본 패딩 제거 */
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+html, body {
+  height: 100%; /* 전체 높이를 100%로 설정 */
+  font-family: Arial, sans-serif; /* 기본 폰트 설정 */
+  line-height: 1.5; /* 줄 간격 설정 */
+  background-color: #f4f4f4; /* 기본 배경 색상 설정 */
+  color: #333; /* 기본 텍스트 색상 설정 */
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+/* 링크 스타일 초기화 */
+a {
+  text-decoration: none; /* 링크의 기본 밑줄 제거 */
+  color: inherit; /* 링크 색상 상속 */
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+img {
+  max-width: 100%; /* 이미지가 부모 요소를 넘지 않도록 설정 */
+  height: auto; /* 이미지 비율 유지 */
+}
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+/* 부트스트랩의 기본 클래스를 유지하면서 추가 스타일 적용 */
+.container {
+  max-width: 1280px; /* 최대 너비 설정 */
+  margin: 0 auto; /* 중앙 정렬 */
+  padding: 20px; /* 기본 패딩 추가 */
+}
+
+/* 그리드 시스템 초기화 (필요에 따라 조정) */
+.row {
+  display: flex; /* 플렉스 박스로 설정 */
+  flex-wrap: wrap; /* 여러 줄로 나누기 */
+}
+
+.col {
+  flex: 1; /* 각 열이 동일한 너비를 차지하도록 설정 */
+  padding: 10px; /* 열 간의 패딩 추가 */
 }

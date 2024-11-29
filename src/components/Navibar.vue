@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top" data-bs-theme="dark">
+  <nav class="navbar navbar-expand-lg fixed-top" style="background: rgba(0, 0, 0, 0.7);" data-bs-theme="dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">영화평가</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,5 +31,8 @@
 </template>
 
 <style scoped lang="scss">
-
+/* 추가적인 스타일이 필요하다면 여기에 작성 */
+.navbar {
+  transition: background 0.3s; /* 배경 색상 전환 애니메이션 추가 */
+}
 </style>
