@@ -1,5 +1,5 @@
 <template>
-  <Navibar />
+  <Navibar @show-login = "showLoginForm = true"/>
   <div class="hero">
     <div class="image-container">
       <div class="gradient-overlay"></div> <!-- 그라데이션 오버레이 추가 -->
@@ -11,6 +11,7 @@
       <MovieList :paginated-movies="movies" :load-more="loadMore" />
     </div>
   </div>
+  <LoginForm v-if="showLoginForm" @close="showLoginForm = false"/>
 </template>
 
 <script setup>
@@ -18,10 +19,12 @@ import {ref, onMounted} from 'vue';
 import axios from 'axios';
 import Navibar from "@/components/Navibar.vue";
 import MovieList from "@/components/MovieList.vue";
+import LoginForm from "@/components/LoginForm.vue"
 
 const movies = ref([]); // 영화 목록 저장
 const currentPage = ref(0); // 현재 페이지 번호
 const pageSize = 8; // 한 페이지에 보여줄 영화 수
+const showLoginForm = ref(false); //로그인 모달 표시상태 init
 
 const fetchMovies = async (page = 1) => {
   try {

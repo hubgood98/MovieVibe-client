@@ -2,7 +2,7 @@
   <section id="recentlyMovie" class="container">
     <div class="row justify-content-center">
       <div v-if="paginatedMovies.length === 0" class="col-12 text-center">영화 정보가 없습니다.</div>
-      <div class="col-12 col-md-6 col-lg-4 mb-4" v-for="(movie, index) in paginatedMovies" :key="movie.id">
+      <div class="col-12 col-md-6 col-lg-3 mb-4" v-for="(movie, index) in paginatedMovies" :key="movie.id">
         <div class="card h-100 shadow-lg">
           <img :src="movie.poster_path" class="card-img-top" alt="영화 포스터" />
           <div class="card-body">
@@ -32,7 +32,7 @@ const props = defineProps({
 </script>
 
 <style lang="scss" scoped>
-$card-height: 500px; // 카드 이미지의 높이 변수 정의
+$card-height: 400px; // 카드 이미지의 높이 변수 정의
 
 .card {
   width: 100%; // 카드 너비를 100%로 설정하여 열에 맞게 조정
@@ -48,7 +48,7 @@ $card-height: 500px; // 카드 이미지의 높이 변수 정의
 
 .card-img-top {
   width: 100%; // 이미지 너비를 카드에 맞춤
-  height: 500px; // 이미지 높이 고정
+  height: 400px; // 이미지 높이 고정
   object-fit: cover; // 비율 유지하면서 채우기
 }
 

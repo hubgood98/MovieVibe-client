@@ -1,5 +1,5 @@
 <script setup>
-
+// 로그인 관련 로직을 추가할 수 있습니다.
 </script>
 
 <template>
@@ -22,16 +22,19 @@
           </li>
         </ul>
         <form class="d-flex" role="search">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <input class="form-control me-2" type="search" placeholder="Title" aria-label="Search">
           <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
+        <div class="ms-3">
+          <button class="btn btn-outline-light" @click="$emit('show-login')">로그인</button>
+        </div>
       </div>
     </div>
   </nav>
 </template>
 
 <style scoped lang="scss">
-/* 추가적인 스타일이 필요하다면 여기에 작성 */
+
 .navbar {
   transition: background 0.3s; /* 배경 색상 전환 애니메이션 추가 */
 }
