@@ -4,21 +4,28 @@
       <div v-if="paginatedMovies.length === 0" class="col-12 text-center">영화 정보가 없습니다.</div>
       <div class="col-12 col-md-6 col-lg-3 mb-4" v-for="(movie, index) in paginatedMovies" :key="movie.id">
         <div class="card h-100 shadow-lg">
-          <img :src="movie.poster_path" class="card-img-top" alt="영화 포스터" />
-          <div class="card-body">
-            <h5 class="card-title">{{ movie.title }}</h5>
-            <p class="card-text">평점: {{ movie.vote_average }}</p>
-          </div>
+          <div @click="fetchMovieDetails(movie.id)" style="cursor: pointer;">
+            <img :src="movie.poster_path" class="card-img-top" alt="영화 포스터"/>
+            <div class="card-body">
+              <h5 class="card-title">{{ movie.title }}</h5>
+              <p class="card-text">평점: {{ movie.vote_average }}</p>
+            </div>
+          </div> <!-- 닫는 div 추가 -->
         </div>
       </div>
-      <div class="text-center w-100">
-        <button v-if="paginatedMovies.length > 0" @click="loadMore" class="btn btn-primary">더 보기</button>
-      </div>
+    </div>
+    <div class="text-center w-100">
+      <button v-if="paginatedMovies.length > 0" @click="loadMore" class="btn btn-primary">더 보기</button>
     </div>
   </section>
 </template>
 
+
 <script setup>
+import { useRouter } from 'vue-router';
+import axios from 'axios';
+const router = useRouter();
+
 const props = defineProps({
   paginatedMovies: {
     type: Array,
@@ -29,6 +36,26 @@ const props = defineProps({
     required: true,
   },
 });
+
+const fetchMovieDetails = async (movieId) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/api/movies/detail/${movieId}`);
+    const movieDetails = response.data;
+    console.log(movieDetails);
+
+
+    if (!router) {
+      console.error("'router' is undefined or not instantiated");
+    } else if (!router.push) {
+      console.error("'push' function does not exist on 'router'");
+    } else {
+      await router.push({ name: 'MovieDetail', params: { id: movieId } });
+    }
+  } catch (error) {
+    console.error("Error fetching movie details:", error);
+  }
+};
+
 </script>
 
 <style lang="scss" scoped>
