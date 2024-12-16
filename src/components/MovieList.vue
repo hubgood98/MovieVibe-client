@@ -10,7 +10,7 @@
               <h5 class="card-title">{{ movie.title }}</h5>
               <p class="card-text">평점: {{ movie.vote_average }}</p>
             </div>
-          </div> <!-- 닫는 div 추가 -->
+          </div>
         </div>
       </div>
     </div>

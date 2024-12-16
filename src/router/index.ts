@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import MovieSearch from '@/components/MovieSearch.vue';
+import vibeHome from '@/components/vibeHome.vue';
 import MovieDetail from '@/components/MovieDetail.vue';
 
 const routes = [
     {
-        path: '/movies',
-        name: 'MovieSearch',
-        component: MovieSearch,
+        path: '/',
+        name: '홈페이지',
+        component: vibeHome,
     },
     {
         path: '/movies/detail/:id',

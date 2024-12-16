@@ -1,20 +1,24 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
+import {useRouter} from "vue-router";
 
 const accountId = ref('');
 const password = ref('');
 
+const router = useRouter(); // router instance
+
 const handleLogin = async () => {
-  try{
-    const response = await axios.post(`http://localhost:8080/login`, {
-      username: accountId.value,
+  try {
+    const response = await axios.post('http://localhost:8080/login', {
+      accountId: accountId.value,
       password: password.value,
     });
-    console.log('로그인 성공: ',response.data);
-  }catch (error){
-    console.log('로그인 실패: ',error.response.data);
-    alert('로그인에 실패했습니다. 다시 시도해 주세요.')
+    console.log('로그인 성공: ', response.data);
+    router.push('/happy');  // redirecting to home
+  } catch (error) {
+    console.log('로그인 실패: ', error.response?.data || error.message);
+    alert('로그인에 실패했습니다. 다시 시도해 주세요.');
   }
 };
 
@@ -31,12 +35,12 @@ const handleLogin = async () => {
         <div class="modal-body">
           <form @submit.prevent="handleLogin">
             <div class="mb-3">
-              <label for="username" class="form-label">아이디</label>
-              <input type="text" v-model="accountId" class="form-control" id="username" required />
+              <label for="accountId" class="form-label">아이디</label>
+              <input type="text" :value="accountId" @input="accountId = $event.target.value" class="form-control"/>
             </div>
             <div class="mb-3">
               <label for="password" class="form-label">비밀번호</label>
-              <input type="password" v-model="password" class="form-control" id="password" required />
+              <input type="password" :value="password" @input="password = $event.target.value" class="form-control"/>
             </div>
             <button type="submit" class="btn btn-primary">확인</button>
           </form>
