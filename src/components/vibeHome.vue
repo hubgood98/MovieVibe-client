@@ -1,37 +1,27 @@
 <template>
-  <div class="vibe-home container d-flex justify-content-center align-items-center">
+  <div class="vibe-home container text-center mt-4">
+    <h2 class="movie-chart-title mb-4">🎬 무비차트</h2>
     <div class="movie-list-section position-relative">
-
-      <button
-          class="btn btn-secondary scroll-button left"
-          @click="scrollLeft">‹
-      </button>
+      <!-- 왼쪽 스크롤 버튼 -->
+      <button class="btn scroll-button left" @click="scrollLeft">‹</button>
 
       <!-- 영화 리스트 -->
       <div class="movie-list d-flex flex-nowrap overflow-hidden" ref="containerRef">
         <div
-            class="movie-card flex-shrink-0 d-flex justify-content-center"
-            v-for="movie in visibleMovies"
+            class="movie-card flex-shrink-0 position-relative"
+            v-for="(movie, index) in visibleMovies"
             :key="movie.id">
-          <div class="card">
-            <img
-                class="card-img-top"
-                :src="movie.poster_path"
-                :alt="`${movie.title} 포스터`"/>
+          <!-- 순위 배지 -->
+          <span class="rank-badge">{{ currentIndex + index + 1 }}</span>
+          <div class="card" @click="goToMovieDetail(movie.id)">
+            <!-- 포스터 이미지 -->
+            <img class="card-img-top" :src="movie.poster_path" :alt="`${movie.title} 포스터`" />
             <div class="card-body">
+              <!-- 영화 제목 -->
               <h5 class="card-title">{{ movie.title }}</h5>
-              <p class="card-text">
-                <span
-                    v-for="index in getTotalStars(movie.vote_average)"
-                    :key="`filled-${index}`"
-                    class="fa fa-star text-warning"
-                ></span>
-                <span
-                    v-for="index in 5 - getTotalStars(movie.vote_average)"
-                    :key="`empty-${index}`"
-                    class="fa fa-star-o"
-                ></span>
-                <span>({{ movie.vote_average.toFixed(1) }})</span>
+              <!-- 평점 -->
+              <p class="card-text text-secondary mb-1">
+                평점: {{ movie.vote_average.toFixed(1) }} ⭐
               </p>
             </div>
           </div>
@@ -39,34 +29,32 @@
       </div>
 
       <!-- 오른쪽 스크롤 버튼 -->
-      <button
-          class="btn btn-secondary scroll-button right"
-          @click="scrollRight"
-      >
-        ›
-      </button>
+      <button class="btn scroll-button right" @click="scrollRight">›</button>
     </div>
   </div>
 </template>
 
 
 <script setup>
-import {ref, onMounted} from 'vue';
-import axios from 'axios';
+import { ref, onMounted } from "vue";
+import axios from "axios";
+import { useRouter } from "vue-router";
 
 const movies = ref([]);
 const containerRef = ref(null);
-const currentIndex = ref(0); //몇번째 리스트인지 표시하는값
+const currentIndex = ref(0);
 const itemsPerPage = 5;
+
+let router = useRouter();
 
 const fetchMovies = async () => {
   try {
     const response = await axios.get(
-        'http://localhost:8080/api/movies/list?voteAverageOrder=desc&size=15'
+        "http://localhost:8080/api/movies/list?voteAverageOrder=desc&size=15"
     );
     movies.value = response.data.content;
   } catch (err) {
-    console.error('Error fetching movies:', err);
+    console.error("Error fetching movies:", err);
     movies.value = [];
   }
 };
@@ -101,89 +89,123 @@ onMounted(async () => {
   updateVisibleMovies();
 });
 
-const getTotalStars = (voteAverage) => Math.round(voteAverage / 2);
+//상세 정보 페이지로의 이동을 처리하는 함수
+const goToMovieDetail = (movieId) => {
+  router.push({ name: 'MovieDetail', params: { id: movieId } });
+};
 </script>
 
-
 <style lang="scss" scoped>
-.movie-list-section {
-  margin-top: 50px;
+/* 전체 레이아웃 고정 */
+
+.vibe-home {
+  width: 100%;
   position: relative;
-  width: 80%;
+}
+
+.movie-list-section {
+  position: relative;
+
+  width: 850px; /* 고정 너비 */
+  max-width: 90%;
+  margin: 0 auto;
+  overflow: visible;
+  display: flex;
+  justify-content: center;
 }
 
 .movie-list {
   display: flex;
-  gap: 15px;
+  gap: 15px; /* 카드 사이 여백 */
   transition: transform 0.5s ease-in-out;
 }
 
 .movie-card {
-  flex: 0 0 auto;
-  width: 150px;
-  border: 1px solid #ddd;
+  flex: 0 0 auto; /* 고정 크기 */
+  width: 150px; /* 포스터 너비 */
+  height: 270px; /* 포스터 및 제목 포함 높이 */
+  text-align: center;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  overflow: hidden;
+  position: relative;
 
-  img {
+  .card {
     width: 100%;
-    height: auto;
-    object-fit: cover;
+    height: 100%;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 200px; /* 이미지 고정 높이 */
+      object-fit: cover; /* 이미지 비율 유지 */
+    }
+
+    .card-body {
+      padding: 5px;
+
+      .card-title {
+        font-size: 0.85rem;
+        font-weight: bold;
+        color: #333;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .card-text {
+        font-size: 0.8rem;
+        color: #555;
+        margin-top: 3px;
+      }
+    }
   }
 }
 
-.card-body {
-  padding: 8px;
-
-  .card-title {
-    font-size: 0.875rem;
-    margin-bottom: 5px;
-    font-weight: bold;
-  }
-
-  .card-text {
-    font-size: 0.75rem;
-    color: #666;
-    line-height: 1.2;
-
-    .fa-star {
-      color: #ffa500;
-    }
-
-    .fa-star-o {
-      color: #ddd;
-    }
-  }
+/* 순위 배지 스타일 */
+.rank-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #ff5722; /* 주황색 배경 */
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 10;
 }
 
-/* 버튼 스타일 */
+/* 스크롤 버튼 스타일 */
 .scroll-button {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 10;
-  width: 30px;
-  height: 30px;
-  font-size: 18px;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #6c757d;
-  border: none;
-  color: white;
-  border-radius: 50%;
+  font-size: 2rem;
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #5a6268;
+    background-color: rgba(0, 0, 0, 0.8);
   }
 
   &.left {
-    left: -15px;
+    left: -20px;
   }
 
   &.right {
-    right: -15px;
+    right: -20px;
   }
 }
 </style>
